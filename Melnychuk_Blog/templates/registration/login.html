@@ -1,0 +1,26 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}User Login{% endblock title %}
+
+{% block content %}
+<form method="post" action="{% url 'login' %}">
+    <div class="login-box">
+        <h1>Login</h1>
+
+        <div class="text-box">
+            <i class="fa fa-user" aria-hidden="true"></i>
+            <input type="text" name="username" autofocus="" autocapitalize="none"
+                   autocomplete="username" maxlength="150" required="" id="id_username">
+        </div>
+        <div class="text-box">
+            <i class="fa fa-lock" aria-hidden="true"></i>
+            <input type="password" name="password" autocomplete="current-password"
+                   required="" id="id_password">
+        </div>
+        <input class="btn" type="submit" name="" value="Sign in">
+        <p class="reg">Not register yet? <a href="{% url 'register' %}">Register here</a>.</p>
+        <input type="hidden" name="next" value="{{next}}">
+        {% csrf_token %}
+    </div>
+</form>
+{% endblock content %}

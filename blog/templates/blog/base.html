@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Melnychuk_Blog</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/new.css' %}">
+	<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Bree+Serif&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
+</head>
+<body>
+	<div id="wrapper">
+		<header>
+			<div class="name">
+				<h1>Melnychuk_Blog</h1>
+				<h2><a href="/">Welcome to my blog!</a></h2>
+			</div>
+			<div class="log-in">
+				<ul>
+					{% if user.is_authenticated %}
+					<li>
+					Hello, {{user.username}}.
+					</li>
+					<li><a href="{% url 'logout' %}?next=/">Log out</a></li>
+					{% else %}
+					<li>
+					Not logged in.
+					</li>
+					<li><a href="{% url 'login' %}?next=/">Log in</a></li>
+					{% endif %}
+				</ul>
+			</div>
+		</header>
+        {% block content %}
+        {% endblock content %}
+	</div>
+
+</body>
+</html>

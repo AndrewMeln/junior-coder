@@ -1,0 +1,90 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+{% block content %}
+	{% if user.is_authenticated %}
+    <p class="edit">Do you want to <a href="/admin/blog/post/{{post.id}}/change"
+									  target="_blank">Edit Post </a>?</p>
+    {% endif %}
+	<article>
+		<h2 class="main-str">{{ post.title }} </h2>
+		<h4 class="sub-main">Created: {{post.created}} by {{post.author}}<br/>
+		Published: {{post.published }},<br/> Updated: {{post.updated}}</h4>
+		<div class="text-body">
+			<p class="image">
+				{% if post.image.url != None %}
+					<img src="{{ post.image.url }}" alt="">
+				{% endif %}
+				{{post.body|safe}}
+			</p>
+		</div>
+		<div class="comments-block">
+			<div class="all-comments">
+				{% with comments.count as total_comments %}
+					{% if total_comments > 10 %}
+						<script type="text/javascript" src="{% static 'js/detail.js' %}">
+						</script>
+						<h3>
+							Last 10 comments of {{total_comments}} comment{{ total_comments|pluralize }}
+							<p class="btn-all">
+								<input type="button" value="All comments" onmousedown="viewDiv()">
+							</p>
+						</h3>
+					{% else %}
+						<h3>
+							{{total_comments}} comment{{ total_comments|pluralize }}
+						</h3>
+					{% endif %}
+				{% endwith %}
+				<div id="comment1">
+					{% for comment in ten_last_comments %}
+						<div class="ten-comment">
+							<p class="comm-info">
+								By: <span>{{comment.author}}</span> |
+								Add: {{comment.created}}
+							</p>
+							<p>{{ comment.body|linebreaks }}</p>
+						</div>
+
+						{% empty %}
+						<p class="no-comment"> There are no comments yet.</p>
+					{% endfor %}
+				</div>
+				<div id="comments">
+					{% for comment in comments %}
+						<div class="ten-comment">
+							<p class="comm-info">
+								By: <span>{{comment.author}}</span> |
+								Add: {{comment.created}}
+							</p>
+							<p>{{ comment.body|linebreaks }}</p>
+						</div>
+					{% endfor %}
+				</div>
+			</div>
+			{% if new_comment %}
+				<div class="add-comment">
+					<h3>Your comment has been added.</h3>
+					<h3>Add a new comment: <a href="{{post.get_absolute_url}}">go</a></h3>
+				</div>
+			{% else %}
+				<div class="add-comment">
+					<h3>Add a new comment:</h3>
+					<h5>Please login to comment the post</h5>
+					<form method="post">
+						<p>
+							<textarea name="body" placeholder="Enter your comment..." cols="40"
+									  rows="10" required="" class="id_body"></textarea>
+						</p>
+						<p>
+							<select name="author" required="" class="id_author">
+								<option value="{{user.id}}">{{user.username}}</option>
+							</select>
+						</p>
+						{%csrf_token%}
+						<p><input type="submit" value="Add Comment"></p>
+					</form>
+				</div>
+			{% endif %}
+		</div>
+	</article>
+{% endblock content %}
